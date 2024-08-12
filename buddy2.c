@@ -8,12 +8,12 @@ struct buddy2 {
   unsigned longest[1]; 
 };
 
-#define LEFT_LEAF(index) ((index) * 2 + 1)
-#define RIGHT_LEAF(index) ((index) * 2 + 2)
-#define PARENT(index) ( ((index) + 1) / 2 - 1)
+#define LEFT_LEAF(index)    ((index) * 2 + 1)
+#define RIGHT_LEAF(index)   ((index) * 2 + 2)
+#define PARENT(index)       (((index) + 1) / 2 - 1)
 
-#define IS_POWER_OF_2(x) (!((x)&((x)-1)))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define IS_POWER_OF_2(x)    (!((x)&((x)-1)))
+#define MAX(a, b)           ((a) > (b) ? (a) : (b))
 
 #define ALLOC malloc
 #define FREE free
@@ -123,8 +123,11 @@ int buddy2_size(struct buddy2* self, int offset) {
   assert(self && offset >= 0 && offset < self->size);
 
   node_size = 1;
-  for (index = offset + self->size - 1; self->longest[index] ; index = PARENT(index))
+  for (index = offset + self->size - 1; self->longest[index] ; index = PARENT(index)) {
     node_size *= 2;
+    if (index == 0)
+      break;
+  }
 
   return node_size;
 }
