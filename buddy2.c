@@ -18,6 +18,12 @@ struct buddy2 {
 #define ALLOC malloc
 #define FREE free
 
+/**
+ * 把size调整到向上取到最近的2次幂
+ * size |= size >> n;表示从低位到高位按2n位分组,每组内高n位复制到低n位
+ * 最后经过处理size是从最高位的1开始往低位全1的整数
+ * return size + 1; 得到向上凑够最近2次幂
+ */
 static unsigned fixsize(unsigned size) {
   size |= size >> 1;
   size |= size >> 2;
@@ -61,7 +67,7 @@ int buddy2_alloc(struct buddy2* self, int size) {
 
   if (size <= 0)
     size = 1;
-  else if (!IS_POWER_OF_2(size))
+  else if (!IS_POWER_OF_2(size)) //保证是2的次幂
     size = fixsize(size);
 
   if (self->longest[index] < size)
